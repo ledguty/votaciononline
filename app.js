@@ -14,6 +14,7 @@ function mostrarPagina(pagina) {
     document.querySelectorAll('.pagina').forEach(p => p.style.display = 'none');
     document.getElementById(pagina).style.display = 'block';
 }
+
 function seleccionarOpcion(opcion) {
     opcionSeleccionada = opcion;
     document.querySelectorAll('#votacion button').forEach(btn => btn.classList.remove('seleccionado'));
@@ -39,6 +40,19 @@ function guardarTexto() {
     const nuevaDescripcion = document.getElementById('nuevaDescripcion').value;
     document.getElementById('titulo').innerText = nuevoTitulo;
     document.getElementById('descripcion').innerText = nuevaDescripcion;
+    localStorage.setItem('titulo', nuevoTitulo);
+    localStorage.setItem('descripcion', nuevaDescripcion);
+    mostrarPagina('inicio');
+}
+
+function borrarVotacion() {
+    votos = { si: 0, no: 0, abstenerse: 0 };
+    for (let usuario in usuarios) {
+        usuarios[usuario].haVotado = false;
+    }
+    localStorage.removeItem('votos');
+    localStorage.removeItem('usuarios');
+    alert('La votación ha sido borrada.');
     mostrarPagina('inicio');
 }
 
@@ -115,6 +129,34 @@ function mostrarResultados() {
                 legend: {
                     display: false
                 }
+            }
+        }
+    });
+}
+
+window.onload = function() {
+    const titulo = localStorage.getItem('titulo');
+    const descripcion = localStorage.getItem('descripcion');
+    if (titulo) {
+        document.getElementById('titulo').innerText = titulo;
+    }
+    if (descripcion) {
+        document.getElementById('descripcion').innerText = descripcion;
+    }
+    const votosGuardados = localStorage.getItem('votos');
+    if (votosGuardados) {
+        votos = JSON.parse(votosGuardados);
+    }
+    const usuariosGuardados = localStorage.getItem('usuarios');
+    if (usuariosGuardados) {
+        Object.assign(usuarios, JSON.parse(usuariosGuardados));
+    }
+};
+
+window.onbeforeunload = function() {
+    localStorage.setItem('votos', JSON.stringify(votos));
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+};
             }
         }
     });
