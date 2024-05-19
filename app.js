@@ -157,7 +157,3 @@ window.onbeforeunload = function() {
     localStorage.setItem('votos', JSON.stringify(votos));
     localStorage.setItem('usuarios', JSON.stringify(usuarios));
 };
-            }
-        }
-    });
-}
